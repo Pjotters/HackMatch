@@ -1,0 +1,116 @@
+body {
+  background: linear-gradient(135deg, #171e2f 0%, #3a4767 100%);
+  color: #f3f3f7;
+  font-family: 'Inter', Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+header {
+  background: #232c44;
+  color: #fff;
+  padding: 2em 1em 1em 1em;
+  text-align: center;
+  border-radius: 0 0 18px 18px;
+}
+header h1 {
+  margin: 0 0 0.3em 0;
+  font-size: 2.2em;
+  letter-spacing: 0.02em;
+}
+nav {
+  margin: 1em 0 0 0;
+  display: flex;
+  gap: 2em;
+  justify-content: center;
+}
+nav a {
+  color: #b8b8d1;
+  text-decoration: none;
+  font-weight: 500;
+  border-radius: 8px;
+  padding: 0.45em 1.3em;
+  transition: background 0.15s, color 0.15s;
+}
+nav a.active, nav a:hover {
+  background: #2979ff;
+  color: #fff;
+}
+main {
+  max-width: 750px;
+  margin: 2.5em auto 2em auto;
+  background: #232c44cc;
+  border-radius: 16px;
+  padding: 2em 2em 2.5em 2em;
+  box-shadow: 0 8px 40px #0007;
+}
+h2, h3 {
+  color: #7f5af0;
+}
+ul {
+  margin-bottom: 1.5em;
+}
+.cta-btn {
+  background: linear-gradient(90deg, #2979ff 70%, #1db954 100%);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 14px 36px;
+  margin: 16px 8px;
+  font-size: 1.18em;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 18px #2979ff22;
+  transition: background 0.21s, box-shadow 0.21s, transform 0.21s;
+  text-decoration: none;
+  letter-spacing: 0.02em;
+}
+.cta-btn:hover {
+  background: linear-gradient(90deg, #1db954 70%, #2979ff 100%);
+  color: #fff;
+  transform: translateY(-2px) scale(1.06);
+  box-shadow: 0 6px 28px #1db95444;
+}
+.lab-card {
+  background: #232c44;
+  border-radius: 14px;
+  box-shadow: 0 2px 18px #2979ff22;
+  margin: 1.4em 0;
+  padding: 1.2em 1.5em;
+  color: #f3f3f7;
+}
+.lab-card h3 {
+  margin-top: 0;
+  color: #1db954;
+}
+.lab-card ul {
+  margin-top: 0.6em;
+}
+.lab-action {
+  margin-top: 1.2em;
+}
+input, button, textarea {
+  font-size: 1em;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #3a4767;
+  margin-bottom: 0.5em;
+}
+button {
+  background: #2979ff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: background 0.17s;
+}
+button:hover {
+  background: #1db954;
+}
+footer {
+  margin-top: 40px;
+  padding: 22px 0 12px 0;
+  background: #222c;
+  color: #b8b8d1;
+  text-align: center;
+  font-size: 1em;
+  border-radius: 18px 18px 0 0;
+}

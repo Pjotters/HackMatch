@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <title>HackMatch Labs | Praktijkoefeningen</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>HackMatch Labs</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="cursus.html">Cursus</a>
+      <a href="labs.html" class="active">Labs</a>
+      <a href="kennisbank.html">Kennisbank</a>
+      <a href="over.html">Over</a>
+    </nav>
+  </header>
+  <main>
+  <script src="js/auth.js"></script>
+  <script>
+    requireLogin(function(user) {
+      document.getElementById('userWelkom').innerHTML = `Welkom, <b>${user.naam}</b>!`;
+    });
+    // Sla voortgang per user op in localStorage
+    function saveLabProgress(lab, value) {
+      const uid = Auth.getUser().userId;
+      let progress = JSON.parse(localStorage.getItem('hackmatch_progress')||'{}');
+      if (!progress[uid]) progress[uid] = {};
+      progress[uid][lab] = value;
+      localStorage.setItem('hackmatch_progress', JSON.stringify(progress));
+    }
+    function getLabProgress(lab) {
+      const uid = Auth.getUser().userId;
+      let progress = JSON.parse(localStorage.getItem('hackmatch_progress')||'{}');
+      return progress[uid]?.[lab] || null;
+    }
+  </script>
+  <div id="userWelkom" style="margin-bottom:1em;"></div>
+  <div id="leaderboardContainer" style="margin-bottom:2em;"></div>
+  <div id="progressBarContainer" style="margin-bottom:2em;"></div>
+  <div id="certificaatMsg" style="display:none;margin-bottom:2em;"></div>
+  <h2>Praktijklabs</h2>
+  <div class="lab-card" id="lab1">
+    <h3>Lab 1: Vind een verborgen pagina <span class="lab-status" id="lab1-status"></span></h3>
+    <p>Zoek naar <b>robots.txt</b> of probeer handmatig directories te raden. Welke informatie vind je?</p>
+    <ul>
+      <li>Tip: Kijk naar <code>/robots.txt</code> en probeer <code>/admin/</code> of <code>/backup/</code>.</li>
+    </ul>
+    <div class="lab-action">
+      <input type="text" id="lab1-answer" placeholder="Wat vind je in robots.txt?">
+      <button onclick="checkLab1()">Controleer</button>
+      <span id="lab1-feedback"></span>
+    </div>
+  </div>
+  <div class="lab-card" id="lab2">
+    <h3>Lab 2: XSS-aanval simuleren <span class="lab-status" id="lab2-status"></span></h3>
+    <p>Probeer een script-injectie op het onderstaande formulier. Voer bijvoorbeeld <code>&lt;script&gt;alert('XSS')&lt;/script&gt;</code> in en kijk wat er gebeurt.</p>
+    <form id="xssForm">
+      <input type="text" id="xssInput" placeholder="Typ hier je bericht...">
+      <button type="submit">Verstuur</button>
+    </form>
+    <div id="xssOutput" style="margin-top:1em;"></div>
+    <div class="lab-action">
+      <button type="button" onclick="checkLab2()">Markeer als voltooid</button>
+      <span id="lab2-feedback"></span>
+    </div>
+    <ul>
+      <li>Uitleg: XSS staat voor Cross-Site Scripting. Het is belangrijk om invoer altijd te ontsnappen!</li>
+      <li>Tip: Probeer ook <code>&lt;b&gt;vet&lt;/b&gt;</code> of <code>&lt;img src=x onerror=alert(1)&gt;</code></li>
+    </ul>
+  </div>
+  <div class="lab-card" id="lab3">
+    <h3>Lab 3: Brute-force een zwak wachtwoord <span class="lab-status" id="lab3-status"></span></h3>
+    <p>Stel je voor: het wachtwoord is een getal tussen 1000 en 1010. Probeer het te raden!</p>
+    <form id="bruteForm">
+      <input type="number" id="bruteInput" min="1000" max="1010" placeholder="Wachtwoord poging">
+      <button type="submit">Test</button>
+    </form>
+    <div id="bruteResult"></div>
+    <div class="lab-action">
+      <button type="button" onclick="checkLab3()">Markeer als voltooid</button>
+      <span id="lab3-feedback"></span>
+    </div>
+    <ul>
+      <li>Uitleg: Brute-force is het proberen van veel combinaties. Kies altijd sterke wachtwoorden!</li>
+    </ul>
+  </div>
+  <div class="lab-card">
+    <h3>Lab 4: OSINT - Open Source Intelligence</h3>
+    <p>Zoek online naar een e-mailadres van een fictief bedrijf: <b>demo-hackmatch.nl</b>. Welke bronnen gebruik je?</p>
+    <ul>
+      <li>Tip: Google, LinkedIn, Github, social media, WHOIS, etc.</li>
+      <li>Uitleg: OSINT is legaal als je openbare bronnen gebruikt en geen accounts kraakt.</li>
+    </ul>
+  </div>
+  <div class="lab-card" id="lab5">
+    <h3>Lab 5: SQL-injectie oefenen <span class="lab-status" id="lab5-status"></span></h3>
+    <p>Stel je voor dat onderstaand veld direct in een SQL-query komt. Wat gebeurt er als je <code>' OR '1'='1</code> invult?</p>
+    <form id="sqlForm">
+      <input type="text" id="sqlInput" placeholder="Gebruikersnaam">
+      <button type="submit">Test login</button>
+    </form>
+    <div id="sqlResult"></div>
+    <div class="lab-action">
+      <button type="button" onclick="checkLab5()">Markeer als voltooid</button>
+      <span id="lab5-feedback"></span>
+    </div>
+    <ul>
+      <li>Uitleg: SQL-injectie is een van de meest voorkomende kwetsbaarheden. Gebruik altijd prepared statements!</li>
+    </ul>
+  </div>
+  <div class="lab-card" id="labquiz">
+    <h3>Lab 6: Quiz - Test je kennis <span class="lab-status" id="labquiz-status"></span></h3>
+    <form id="quizForm">
+      <p>1. Wat is het belangrijkste doel van ethical hacking?</p>
+      <label><input type="radio" name="q1" value="a"> Geld verdienen met hacks</label><br>
+      <label><input type="radio" name="q1" value="b"> Kwetsbaarheden vinden en melden</label><br>
+      <label><input type="radio" name="q1" value="c"> Systemen platleggen</label><br>
+      <p>2. Wat is de veiligste manier om SQL-injectie te voorkomen?</p>
+      <label><input type="radio" name="q2" value="a"> Input valideren</label><br>
+      <label><input type="radio" name="q2" value="b"> Prepared statements gebruiken</label><br>
+      <label><input type="radio" name="q2" value="c"> SQL-fouten negeren</label><br>
+      <button type="submit">Check antwoorden</button>
+    </form>
+    <div id="quizResult"></div>
+    <div class="lab-action">
+      <button type="button" onclick="checkLabQuiz()">Markeer als voltooid</button>
+      <span id="labquiz-feedback"></span>
+    </div>
+  </div>
+
+  <!-- Nieuwe labs/quiz -->
+  <div class="lab-card" id="lab7">
+    <h3>Lab 7: Herken phishing <span class="lab-status" id="lab7-status"></span></h3>
+    <form id="phishingForm">
+      <p>Je ontvangt een e-mail: "Uw bankrekening is geblokkeerd, klik <a href='#'>hier</a> om te verifiëren."<br>Wat doe je?</p>
+      <label><input type="radio" name="phish" value="a"> Klikken op de link</label><br>
+      <label><input type="radio" name="phish" value="b"> E-mail verwijderen en melden</label><br>
+      <label><input type="radio" name="phish" value="c"> Doorsturen naar vrienden</label><br>
+      <button type="submit">Controleer</button>
+    </form>
+    <div id="phishResult"></div>
+    <div class="lab-action">
+      <button type="button" onclick="checkLab7()">Markeer als voltooid</button>
+      <span id="lab7-feedback"></span>
+    </div>
+  </div>
+  <div class="lab-card" id="lab8">
+    <h3>Lab 8: Wachtwoordbeleid beoordelen <span class="lab-status" id="lab8-status"></span></h3>
+    <p>Een collega gebruikt het wachtwoord <code>Welkom123</code> voor meerdere accounts.<br>Geef 2 redenen waarom dit onveilig is:</p>
+    <input type="text" id="lab8-answer" placeholder="Reden 1">
+    <input type="text" id="lab8-answer2" placeholder="Reden 2">
+    <div class="lab-action">
+      <button onclick="checkLab8()">Controleer</button>
+      <span id="lab8-feedback"></span>
+    </div>
+  </div>
+  <div class="lab-card" id="lab9">
+    <h3>Lab 9: Social engineering scenario <span class="lab-status" id="lab9-status"></span></h3>
+    <form id="seForm">
+      <p>Iemand belt zogenaamd van de IT-afdeling en vraagt om je wachtwoord. Wat doe je?</p>
+      <label><input type="radio" name="se" value="a"> Je geeft het wachtwoord</label><br>
+      <label><input type="radio" name="se" value="b"> Je weigert en meldt het bij security</label><br>
+      <label><input type="radio" name="se" value="c"> Je vraagt om het wachtwoord van de beller</label><br>
+      <button type="submit">Controleer</button>
+    </form>
+    <div id="seResult"></div>
+    <div class="lab-action">
+      <button type="button" onclick="checkLab9()">Markeer als voltooid</button>
+      <span id="lab9-feedback"></span>
+    </div>
+  </div>
+  <div class="lab-card" id="quiz2">
+    <h3>Quiz 2: Security basics <span class="lab-status" id="quiz2-status"></span></h3>
+    <form id="quiz2Form">
+      <p>1. Wat is MFA?</p>
+      <label><input type="radio" name="q21" value="a"> Een soort malware</label><br>
+      <label><input type="radio" name="q21" value="b"> Meervoudige authenticatie</label><br>
+      <label><input type="radio" name="q21" value="c"> Een wachtwoordmanager</label><br>
+      <p>2. Waarom zijn software-updates belangrijk?</p>
+      <label><input type="radio" name="q22" value="a"> Ze lossen beveiligingslekken op</label><br>
+      <label><input type="radio" name="q22" value="b"> Ze maken je computer trager</label><br>
+      <label><input type="radio" name="q22" value="c"> Ze verwijderen bestanden</label><br>
+      <button type="submit">Check antwoorden</button>
+    </form>
+    <div id="quiz2Result"></div>
+    <div class="lab-action">
+      <button type="button" onclick="checkQuiz2()">Markeer als voltooid</button>
+      <span id="quiz2-feedback"></span>
+    </div>
+  </div>
+  <script>
+    // --- LAB 1 ---
+    function checkLab1() {
+      const val = document.getElementById('lab1-answer').value.trim().toLowerCase();
+      let goed = val.includes('disallow') || val.includes('robots') || val.includes('admin');
+      if (goed) {
+        document.getElementById('lab1-feedback').innerHTML = '✔️ Goed! Je hebt de juiste info gevonden.';
+        saveLabProgressBackend('lab1', 'voltooid');
+        document.getElementById('lab1-status').textContent = '✔️';
+      } else {
+        document.getElementById('lab1-feedback').innerHTML = '❌ Nog niet helemaal goed. Probeer het opnieuw!';
+      }
+    }
+    // --- LAB 2 ---
+    document.getElementById('xssForm').onsubmit = function(e) {
+      e.preventDefault();
+      const val = document.getElementById('xssInput').value;
+      document.getElementById('xssOutput').innerHTML = val; // NIET veilig, alleen demo!
+    };
+    function checkLab2() {
+      saveLabProgressBackend('lab2', 'voltooid');
+      document.getElementById('lab2-feedback').innerHTML = '✔️ Voltooid! Je hebt XSS getest.';
+      document.getElementById('lab2-status').textContent = '✔️';
+    }
+    // --- LAB 3 ---
+    document.getElementById('bruteForm').onsubmit = function(e) {
+      e.preventDefault();
+      const val = document.getElementById('bruteInput').value;
+      if (val == '1007') {
+        document.getElementById('bruteResult').textContent = 'Juist! Dit is het (zwakke) wachtwoord.';
+      } else {
+        document.getElementById('bruteResult').textContent = 'Fout, probeer opnieuw.';
+      }
+    };
+    function checkLab3() {
+      if (document.getElementById('bruteResult').textContent.includes('Juist')) {
+        saveLabProgressBackend('lab3', 'voltooid');
+        document.getElementById('lab3-feedback').innerHTML = '✔️ Voltooid! Je hebt brute-force toegepast.';
+        document.getElementById('lab3-status').textContent = '✔️';
+      } else {
+        document.getElementById('lab3-feedback').innerHTML = '❌ Geef eerst het juiste wachtwoord!';
+      }
+    }
+    // --- LAB 5 ---
+    document.getElementById('sqlForm').onsubmit = function(e) {
+      e.preventDefault();
+      const val = document.getElementById('sqlInput').value;
+      if (val === "admin' OR '1'='1") {
+        document.getElementById('sqlResult').textContent = 'Ingelogd als admin! (Kwetsbaar)';
+      } else {
+        document.getElementById('sqlResult').textContent = 'Login mislukt.';
+      }
+    };
+    function checkLab5() {
+      if (document.getElementById('sqlResult').textContent.includes('Ingelogd')) {
+        saveLabProgressBackend('lab5', 'voltooid');
+        document.getElementById('lab5-feedback').innerHTML = '✔️ Voltooid! Je hebt SQLi gesimuleerd.';
+        document.getElementById('lab5-status').textContent = '✔️';
+      } else {
+        document.getElementById('lab5-feedback').innerHTML = '❌ Voer eerst een succesvolle SQLi uit!';
+      }
+    }
+    // --- LAB QUIZ ---
+    document.getElementById('quizForm').onsubmit = function(e) {
+      e.preventDefault();
+      let goed = 0;
+      if (document.querySelector('input[name="q1"]:checked')?.value === 'b') goed++;
+      if (document.querySelector('input[name="q2"]:checked')?.value === 'b') goed++;
+      if (goed === 2) {
+        document.getElementById('quizResult').innerHTML = '✔️ Beide antwoorden juist!';
+      } else {
+        document.getElementById('quizResult').innerHTML = '❌ Niet alle antwoorden zijn juist.';
+      }
+    };
+    function checkLabQuiz() {
+      if (document.getElementById('quizResult').textContent.includes('✔️')) {
+        saveLabProgressBackend('labquiz', 'voltooid');
+        document.getElementById('labquiz-feedback').innerHTML = '✔️ Quiz voltooid!';
+        document.getElementById('labquiz-status').textContent = '✔️';
+      } else {
+        document.getElementById('labquiz-feedback').innerHTML = '❌ Beantwoord eerst de quiz juist!';
+      }
+    }
+    // --- API progress opslaan ---
+    function saveLabProgressBackend(lab, value) {
+      saveLabProgress(lab, value);
+      const userId = Auth.getUser().userId;
+      fetch(`/api/hackmatch/progress/${userId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ lab, value })
+      });
+    }
+    // --- Status laden bij openen ---
+    // --- Leaderboard ---
+    function renderLeaderboard(myProgress) {
+      // Demo: alleen eigen user zichtbaar
+      const naam = Auth.getUser().naam || 'Stagiair';
+      let count = 0;
+      labKeys.forEach(k => { if (myProgress[k]==='voltooid') count++; });
+      let html = `<div style='background:#232c44;padding:1em 1.5em;border-radius:14px;box-shadow:0 2px 18px #2979ff22;margin-bottom:1em;'>`+
+        `<h3 style='margin:0 0 0.7em 0;font-size:1.15em;color:#1db954;'>🏆 Leaderboard</h3>`+
+        `<table style='width:100%;border-spacing:0;'><tr><th style='text-align:left;'>Naam</th><th style='text-align:center;'>Voltooid</th></tr>`+
+        `<tr style='background:#1db95422;'><td style='font-weight:600;'>${naam} (jij)</td><td style='text-align:center;'>${count}/${labKeys.length}</td></tr>`+
+        `</table></div>`;
+      document.getElementById('leaderboardContainer').innerHTML = html;
+    }
+    // --- Voortgangsbalk & certificaat ---
+    const labKeys = ['lab1','lab2','lab3','lab5','labquiz','lab7','lab8','lab9','quiz2'];
+    function updateProgressBar(data) {
+      let count = 0;
+      labKeys.forEach(k => { if (data[k]==='voltooid') count++; });
+      let pct = Math.round((count/labKeys.length)*100);
+      let bar = `<div style='background:#222c;height:28px;border-radius:12px;overflow:hidden;width:100%;box-shadow:0 2px 12px #2979ff22;margin-bottom:8px;'>`+
+        `<div style='background:linear-gradient(90deg,#1db954,#2979ff);height:100%;width:${pct}%;transition:width .5s;'></div></div>`+
+        `<div style='font-weight:600;'>Voortgang: ${pct}% (${count} van ${labKeys.length} labs/quizzen voltooid)</div>`;
+      document.getElementById('progressBarContainer').innerHTML = bar;
+      if (pct===100) {
+        document.getElementById('certificaatMsg').style.display = 'block';
+        document.getElementById('certificaatMsg').innerHTML =
+          `<div style='background:#1db95422;border:2px solid #1db954;padding:1.5em 1em;border-radius:16px;text-align:center;font-size:1.3em;'>🎉 <b>Gefeliciteerd!</b><br>Je hebt alle labs en quizzen voltooid.<br><span style='font-size:2em;'>🏅</span><br>Download je <a href='#' onclick='downloadCertificaat()'>certificaat</a>!<br></div>`;
+      } else {
+        document.getElementById('certificaatMsg').style.display = 'none';
+      }
+    }
+    function downloadCertificaat() {
+      const naam = Auth.getUser().naam || 'Stagiair';
+      const datum = new Date().toLocaleDateString();
+      const cert = `CERTIFICAAT\n\nDit certificeert dat ${naam}\nalle HackMatch labs en quizzen succesvol heeft afgerond op ${datum}.\n\nGefeliciteerd!`;
+      const blob = new Blob([cert], {type:'text/plain'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `HackMatch-certificaat-${naam.replace(/\s/g,'_')}.txt`;
+      a.click();
+    }
+    // --- Status laden bij openen ---
+    window.addEventListener('DOMContentLoaded', function() {
+      const userId = Auth.getUser().userId;
+      fetch(`/api/hackmatch/progress/${userId}`)
+        .then(r=>r.json()).then(data => {
+          if (data.lab1 === 'voltooid') document.getElementById('lab1-status').textContent = '✔️';
+          if (data.lab2 === 'voltooid') document.getElementById('lab2-status').textContent = '✔️';
+          if (data.lab3 === 'voltooid') document.getElementById('lab3-status').textContent = '✔️';
+          if (data.lab5 === 'voltooid') document.getElementById('lab5-status').textContent = '✔️';
+          if (data.labquiz === 'voltooid') document.getElementById('labquiz-status').textContent = '✔️';
+          if (data.lab7 === 'voltooid') document.getElementById('lab7-status').textContent = '✔️';
+          if (data.lab8 === 'voltooid') document.getElementById('lab8-status').textContent = '✔️';
+          if (data.lab9 === 'voltooid') document.getElementById('lab9-status').textContent = '✔️';
+          if (data.quiz2 === 'voltooid') document.getElementById('quiz2-status').textContent = '✔️';
+          renderLeaderboard(data);
+          updateProgressBar(data);
+        });
+    });
+    // --- Progressbar updaten na elke actie ---
+    function saveLabProgressBackend(lab, value) {
+      saveLabProgress(lab, value);
+      const userId = Auth.getUser().userId;
+      fetch(`/api/hackmatch/progress/${userId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ lab, value })
+      }).then(()=>{
+        fetch(`/api/hackmatch/progress/${userId}`)
+          .then(r=>r.json()).then(updateProgressBar);
+      });
+    }
+
+    // --- LAB 7 ---
+    document.getElementById('phishingForm').onsubmit = function(e) {
+      e.preventDefault();
+      const v = document.querySelector('input[name="phish"]:checked')?.value;
+      if (v === 'b') {
+        document.getElementById('phishResult').innerHTML = '✔️ Goed! Je hebt phishing herkend.';
+      } else {
+        document.getElementById('phishResult').innerHTML = '❌ Niet veilig! Probeer opnieuw.';
+      }
+    };
+    function checkLab7() {
+      if (document.getElementById('phishResult').textContent.includes('✔️')) {
+        saveLabProgressBackend('lab7', 'voltooid');
+        document.getElementById('lab7-feedback').innerHTML = '✔️ Voltooid!';
+        document.getElementById('lab7-status').textContent = '✔️';
+      } else {
+        document.getElementById('lab7-feedback').innerHTML = '❌ Kies eerst het juiste antwoord!';
+      }
+    }
+    // --- LAB 8 ---
+    function checkLab8() {
+      const r1 = document.getElementById('lab8-answer').value.trim().toLowerCase();
+      const r2 = document.getElementById('lab8-answer2').value.trim().toLowerCase();
+      let goed = 0;
+      if (r1.includes('te makkelijk') || r1.includes('veel gebruikt') || r1.includes('hergebruikt') || r1.includes('woordenboek')) goed++;
+      if (r2.includes('te makkelijk') || r2.includes('veel gebruikt') || r2.includes('hergebruikt') || r2.includes('woordenboek')) goed++;
+      if (r1 === r2 && r1 !== '') goed = 1; // niet dubbel tellen
+      if (goed >= 2) {
+        document.getElementById('lab8-feedback').innerHTML = '✔️ Correct! Dit wachtwoord is te zwak en wordt hergebruikt.';
+        saveLabProgressBackend('lab8', 'voltooid');
+        document.getElementById('lab8-status').textContent = '✔️';
+      } else {
+        document.getElementById('lab8-feedback').innerHTML = '❌ Geef twee geldige redenen.';
+      }
+    }
+    // --- LAB 9 ---
+    document.getElementById('seForm').onsubmit = function(e) {
+      e.preventDefault();
+      const v = document.querySelector('input[name="se"]:checked')?.value;
+      if (v === 'b') {
+        document.getElementById('seResult').innerHTML = '✔️ Juist! Nooit wachtwoorden delen.';
+      } else {
+        document.getElementById('seResult').innerHTML = '❌ Niet veilig! Probeer opnieuw.';
+      }
+    };
+    function checkLab9() {
+      if (document.getElementById('seResult').textContent.includes('✔️')) {
+        saveLabProgressBackend('lab9', 'voltooid');
+        document.getElementById('lab9-feedback').innerHTML = '✔️ Voltooid!';
+        document.getElementById('lab9-status').textContent = '✔️';
+      } else {
+        document.getElementById('lab9-feedback').innerHTML = '❌ Kies eerst het juiste antwoord!';
+      }
+    }
+    // --- QUIZ 2 ---
+    document.getElementById('quiz2Form').onsubmit = function(e) {
+      e.preventDefault();
+      let goed = 0;
+      if (document.querySelector('input[name="q21"]:checked')?.value === 'b') goed++;
+      if (document.querySelector('input[name="q22"]:checked')?.value === 'a') goed++;
+      if (goed === 2) {
+        document.getElementById('quiz2Result').innerHTML = '✔️ Beide antwoorden juist!';
+      } else {
+        document.getElementById('quiz2Result').innerHTML = '❌ Niet alle antwoorden zijn juist.';
+      }
+    };
+    function checkQuiz2() {
+      if (document.getElementById('quiz2Result').textContent.includes('✔️')) {
+        saveLabProgressBackend('quiz2', 'voltooid');
+        document.getElementById('quiz2-feedback').innerHTML = '✔️ Quiz voltooid!';
+        document.getElementById('quiz2-status').textContent = '✔️';
+      } else {
+        document.getElementById('quiz2-feedback').innerHTML = '❌ Beantwoord eerst de quiz juist!';
+      }
+    }
+  </script>
+    <h2>Praktijklabs</h2>
+    <ul>
+      <li><b>Lab 1:</b> Vind een verborgen pagina (robots.txt, directory listing)</li>
+      <li><b>Lab 2:</b> Simuleer een XSS-aanval op een demo-formulier</li>
+      <li><b>Lab 3:</b> Brute-force een zwak wachtwoord (met toestemming!)</li>
+      <li><b>Lab 4:</b> OSINT: vind een e-mailadres via openbare bronnen</li>
+      <li><b>Lab 5:</b> SQL-injectie oefenen op een testformulier</li>
+    </ul>
+    <p>Let op: alle labs zijn veilig en alleen bedoeld voor educatief gebruik!</p>
+  </main>
+  <footer>&copy; 2025 HackMatch. Alleen voor educatief gebruik.</footer>
+</body>
+</html>

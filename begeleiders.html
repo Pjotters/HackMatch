@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <title>HackMatch Begeleidersdashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Begeleidersdashboard</h1>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="begeleiders.html" class="active">Begeleiders</a>
+      <a href="labs.html">Labs</a>
+      <a href="cursus.html">Cursus</a>
+    </nav>
+  </header>
+  <main>
+    <h2>Voortgang stagiairs</h2>
+    <div id="progressTable">Laden...</div>
+  </main>
+  <footer>&copy; 2025 HackMatch. Alleen voor educatief gebruik.</footer>
+  <script src="js/auth.js"></script>
+  <script>
+    // Alleen admins mogen deze pagina zien
+    requireLogin(function(user) {
+      if (!user.verified) {
+        document.body.innerHTML = '<main style="max-width:500px;margin:5em auto 2em auto;background:#232c44cc;padding:2em 2em 2.5em 2em;border-radius:16px;box-shadow:0 8px 40px #0007;"><h2>Geen toegang</h2><p>Alleen begeleiders/admins mogen deze pagina bekijken.</p></main>';
+        return;
+      }
+      // Ophalen voortgang van alle users (demo: alleen eigen user in deze setup)
+      fetch(`/api/hackmatch/progress/${user.userId}`)
+        .then(r=>r.json())
+        .then(data => {
+          let html = '<table style="width:100%;background:#232c44;border-radius:12px;"><tr><th>Lab</th><th>Status</th></tr>';
+          for (const lab in data) {
+            html += `<tr><td>${lab}</td><td>${data[lab]}</td></tr>`;
+          }
+          html += '</table>';
+          document.getElementById('progressTable').innerHTML = html;
+        });
+    });
+  </script>
+</body>
+</html>
